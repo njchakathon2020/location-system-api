@@ -11,7 +11,7 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 			<json-logger:content ><![CDATA[#[" "]]]></json-logger:content>
 		</json-logger:logger>
 		<set-variable value="#[attributes.queryParams.address]" doc:name="address" doc:id="17ac346f-636c-4da7-9268-127ef06e3f9d" variableName="address" />
-		<http:request method="GET" doc:name="/request to get the lat and lon of the city / postal code" doc:id="622ef330-ef4a-49f0-90ef-d7b09eb0be7f" config-ref="HTTP_Request_configuration_geoapify" path="/api/v1/geocode/search" target="latNlon" targetValue='#[%dw 2.0
+		<http:request method="GET" doc:name="/request to get the lat and lon of the city / postal code" doc:id="622ef330-ef4a-49f0-90ef-d7b09eb0be7f" config-ref="HTTP_Request_configuration_geoapify" path="${geoapify.basepath}" target="latNlon" targetValue='#[%dw 2.0
 output application/json
 ---
 {
@@ -38,7 +38,7 @@ output application/json
 		</json-logger:logger>
 		<set-variable value='#["proximity:" ++ vars.latNlon.lon ++ "," ++ vars.latNlon.lat as String]' doc:name="proxmity" doc:id="f9f3454c-6338-48d5-9110-ea03770e6764" variableName="proxmity" />
 		<set-variable value='#["circle:" ++ vars.latNlon.lon ++ "," ++ vars.latNlon.lat  ++ ",5000"  as String]' doc:name="radius" doc:id="c61c614c-32e0-44fa-8019-726f02bbbdac" variableName="radius" />
-		<http:request method="GET" doc:name="get Nearby train-station list" doc:id="0865141c-bd5c-4f50-93d2-303f75a4af30" path="/api/v2/places" config-ref="HTTP_Request_configuration_geoapify">
+		<http:request method="GET" doc:name="get Nearby train-station list" doc:id="0865141c-bd5c-4f50-93d2-303f75a4af30" path="${geoapify.placesBasePath}" config-ref="HTTP_Request_configuration_geoapify">
 			<http:query-params ><![CDATA[#[output application/java
 ---
 {
@@ -78,14 +78,14 @@ output application/json
 		<json-logger:logger doc:name="Logger" doc:id="d0cdaf9d-e792-4657-b6b1-b53d27afd222" config-ref="JSON_Logger_Config" message='#["get nearby restaurants and tourist spots"]'>
 			<json-logger:content ><![CDATA[#[" "]]]></json-logger:content>
 		</json-logger:logger>
-		<http:request method="GET" doc:name="/req to get the nearby restaurants, supermarkets and tourist places" doc:id="393a787f-667d-4035-96ef-15e4e6e57055" config-ref="HTTP_Request_configuration_geoapify" path="/api/v2/places">
+		<http:request method="GET" doc:name="/req to get the nearby restaurants, supermarkets and tourist places" doc:id="393a787f-667d-4035-96ef-15e4e6e57055" config-ref="HTTP_Request_configuration_geoapify" path="${geoapify.placesBasePath}">
 			<http:query-params><![CDATA[#[output application/java
 ---
 {
 	"filter" : vars.data.filter ++ "," ++ "5000",
-	"limit" : 20,
+	"limit" : Mule::p('geoapify.limit'),
 	"apiKey" : Mule::p('geoapify.apikey'),
-	"categories" : "catering.restaurant,tourism.attraction,commercial.supermarket",
+	"categories" : Mule::p('geoapify.spotsCategories'),
 	"bias" : vars.data.bias
 }]]]></http:query-params>
 		</http:request>
@@ -115,12 +115,12 @@ else (" ") ) ) groupBy ((item, index) -> item.'type')]]></ee:set-payload>
 		<json-logger:logger doc:name="Logger" doc:id="0aeb01bb-3b26-47f8-b7a1-dc9272fd0cb8" config-ref="JSON_Logger_Config" message='#["get nearby postalcodes"]' >
 			<json-logger:content ><![CDATA[#[" "]]]></json-logger:content>
 		</json-logger:logger>
-		<http:request method="GET" doc:name="/req to get the nearby restaurants, supermarkets and tourist places" doc:id="cf285c8c-7821-4364-a700-8ac1d67db994" config-ref="HTTP_Request_configuration_geoapify" path="/api/v2/places" >
+		<http:request method="GET" doc:name="/req to get the nearby restaurants, supermarkets and tourist places" doc:id="cf285c8c-7821-4364-a700-8ac1d67db994" config-ref="HTTP_Request_configuration_geoapify" path="${geoapify.placesBasePath}" >
 			<http:query-params ><![CDATA[#[output application/java
 ---
 {
 	"filter" : vars.data.filter ++ "," ++ "5000",
-	"limit" : 50,
+	"limit" : Mule::p('geoapify.limit'),
 	"apiKey" : Mule::p('geoapify.apikey'),
 	"categories" : Mule::p('geoapify.postalcodeCategories'),
 	"bias" : vars.data.bias
