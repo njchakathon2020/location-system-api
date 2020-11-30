@@ -36,13 +36,13 @@ This project uses the GeoApify an external API to get the geocode and related in
 Then user need to create a project. On project creation it genereates API KEY which will be used to access the API services.
 
 This project implements two APIs.
-- Geocoding API:  It is used to get the geo-coordinated of the input station name
+- Geocoding API:  It is used to get the geo-coordinates of the input station name
      
      Syntax: 
 
           https://api.geoapify.com/v1/geocode/search?text={search criteria}&apiKey=YOUR_API_KEY
           
- - Place API: It is used to get the inforamation about place like touris attaraction sites, supermarkets, station location, etc.
+ - Place API: It is used to get the inforamation about place like tourist attaraction sites, supermarkets, station location, etc.
  
      Syntax:
           https://api.geoapify.com/v2/places?{filters}&apiKey=YOUR_API_KEY
