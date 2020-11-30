@@ -89,7 +89,7 @@ output application/json
 	"bias" : vars.data.bias
 }]]]></http:query-params>
 		</http:request>
-		<ee:transform doc:name="Copy_of_/list of restaurants, markets and tourist spots" doc:id="9be4b649-0985-4f42-9b13-0dc924482838" >
+		<ee:transform doc:name="/list of restaurants, markets and tourist spots" doc:id="9be4b649-0985-4f42-9b13-0dc924482838" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
@@ -115,7 +115,7 @@ else (" ") ) ) groupBy ((item, index) -> item.'type')]]></ee:set-payload>
 		<json-logger:logger doc:name="Logger" doc:id="0aeb01bb-3b26-47f8-b7a1-dc9272fd0cb8" config-ref="JSON_Logger_Config" message='#["get nearby postalcodes"]' >
 			<json-logger:content ><![CDATA[#[" "]]]></json-logger:content>
 		</json-logger:logger>
-		<http:request method="GET" doc:name="/req to get the nearby restaurants, supermarkets and tourist places" doc:id="cf285c8c-7821-4364-a700-8ac1d67db994" config-ref="HTTP_Request_configuration_geoapify" path="${geoapify.placesBasePath}" >
+		<http:request method="GET" doc:name="/req to get the list of postal codes" doc:id="cf285c8c-7821-4364-a700-8ac1d67db994" config-ref="HTTP_Request_configuration_geoapify" path="${geoapify.placesBasePath}" >
 			<http:query-params ><![CDATA[#[output application/java
 ---
 {
